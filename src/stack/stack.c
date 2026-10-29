@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/29 13:57:34 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/29 17:19:00 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/10/29 17:23:35 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	stack_push_top(t_stack *stack, t_node *node)
 /*
 -Detaches and returns the stack's top node
 -Subtracts 1 from size
--Returns NULL if pile is empty
+-Returns NULL if stack is empty
 */
 t_node	*stack_pop_top(t_stack *stack)
 {
@@ -55,7 +55,10 @@ t_node	*stack_pop_top(t_stack *stack)
 	return (top_node);
 }
 
-/*Returns the stack's bottom node*/
+/*
+-Returns the stack's bottom node
+-Returns NULL if stack is empty
+*/
 t_node	*stack_last(t_stack *stack)
 {
 	t_node	*last_node;
