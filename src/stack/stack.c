@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/29 13:57:34 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/29 17:23:35 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/10/30 21:59:53 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,22 @@ t_node	*stack_last(t_stack *stack)
 		last_node = last_node->next;
 	}
 	return (last_node);
+}
+
+/*
+Frees ever node in the stack
+Sets stack's size to zero
+*/
+void	stack_free(t_stack *stack)
+{
+	t_node	*node;
+
+	node = stack->head;
+	while (stack->head != NULL)
+	{
+		node = node->next;
+		free(stack->head);
+		stack->head = node;
+	}
+	stack->size = 0;
 }

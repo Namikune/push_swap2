@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/29 17:19:04 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/10/30 21:59:27 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,13 @@ typedef struct s_context
 /*Emit*/
 void	emit(t_operation operation, t_context *context);
 /*Index*/
-void	assign_index(t_stack *stack);
+void	rank_numbers(t_stack *stack);
 /*Stack*/
 t_node	*node_new(int value);
 void	stack_push_top(t_stack *stack, t_node *node);
 t_node	*stack_pop_top(t_stack *stack);
 t_node	*stack_last(t_stack *stack);
+void	stack_free(t_stack *stack);
 
 
 #endif
