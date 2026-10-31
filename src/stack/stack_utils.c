@@ -6,12 +6,12 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 21:53:20 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/30 22:25:47 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/10/31 17:45:28 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
+/*This implementation is not correct, need to be updated*/
 int	stack_is_sorted(t_stack *stack)
 {
 	t_node	*node;
