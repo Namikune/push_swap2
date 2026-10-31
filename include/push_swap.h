@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/31 16:32:02 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/10/31 19:19:21 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <unistd.h>
 # include <limits.h>
 # include <libft.h>
+# include <stdbool.h>
+
 typedef enum e_operation
 {
 	OP_SA,
@@ -40,11 +42,17 @@ typedef enum e_strategy
 	COMPLEX
 }	t_strategy;
 
+/*Added extra fields for turk sort*/
 typedef struct s_node
 {
 	int				value;
 	int				index;
+	int				push_cost;
+	bool			above_median;
+	bool			cheapest;
+	struct s_node	*target_node;
 	struct s_node	*next;
+	struct s_node	*prev;
 }	t_node;
 
 typedef struct s_stack

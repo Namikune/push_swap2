@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/29 13:57:34 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/30 21:59:53 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/10/31 19:28:47 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@ t_node	*node_new(int value)
 		return (NULL);
 	node->value = value;
 	node->next = NULL;
+	node->prev = NULL;
+	node->above_median = 0;
+	node->cheapest = false;
+	node->target_node = NULL;
 	node->index = -1;
 	return (node);
 }
