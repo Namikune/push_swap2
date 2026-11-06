@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/31 19:19:21 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/06 17:44:16 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,11 @@ void	stack_push_top(t_stack *stack, t_node *node);
 t_node	*stack_pop_top(t_stack *stack);
 t_node	*stack_last(t_stack *stack);
 void	stack_free(t_stack *stack);
+int		stack_is_sorted(t_stack *stack);
+int		swap_top(t_stack *stack);
+void	sa(t_context *context);
+void	sb(t_context *context);
+void	ss(t_context *context);
 
 
 #endif
