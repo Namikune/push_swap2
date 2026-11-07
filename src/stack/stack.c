@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   stack.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/29 13:57:34 by hadinh            #+#    #+#             */
 /*   Updated: 2026/11/03 21:52:17 by hadinh           ###   ########.fr       */
