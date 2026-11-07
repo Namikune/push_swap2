@@ -6,16 +6,17 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/01 16:41:42 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/06 09:30:23 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/07 18:00:45 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/push_swap.h"
+#include "push_swap.h"
 
 int	error_syntax(char *str)
 {
 	int	i;
-	
+
+	i = 0;
 	if (!str || !*str)
 		return (1);
 	if (str[i] == '+' || str [i] == '-')
@@ -33,40 +34,26 @@ int	error_syntax(char *str)
 	return (0);
 }
 
-int	error_duplicate(t_stack_node *a, int n)
+int	error_duplicate(t_stack *a, int n)
 {
-	if(!a)
+	t_node	*current;
+
+	if(!a || !a->head)
 		return (0);
-	while (a)
+	current = a->head;
+	while (current)
 	{
-		if(a->value == n)
+		if(current->value == n)
 			return (1);
-		a = a->next;
+		current = current->next;
 	}
 	return (0);
 }
 
-void	free_stack(t_stack_node **stack)
+void	free_errors(t_context *context)
 {
-	t_stack_node	*tmp;
-	t_stack_node	*current;
-	
-	if (!stack)
-		return ;
-	current = *stack;
-	while (current)
-	{
-		tmp = current->next;
-		current->value = 0;
-		free(current);
-		current = tmp;
-	}
-	*stack = NULL;
-}
-
-void	free_errors(t_stack_node **a)
-{
-	free_stack(a);
-	ft_printf("Error\n");
+	stack_free(&context->a);
+	stack_free(&context->b);
+	write(2, "Error\n", 6);
 	exit(1);
 }

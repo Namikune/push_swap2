@@ -6,21 +6,40 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 17:43:38 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/06 09:30:16 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/07 18:25:41 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/push_swap.h"
+#include "push_swap.h"
 
-void	sort_three(t_stack_node **a)
+t_node	*find_max(t_stack *stack)
 {
-	t_stack_node	*biggest_node;
+	t_node	*current;
+	t_node	*max_node;
 
-	biggest_node = find_max(*a);
-	if (biggest_node == *a)
-		ra(a, false);
-	else if ((*a)->next == biggest_node)
-		rra(a, false);
-	if ((*a)->value > (*a)->next->value)
-		sa(a, false);
+	if (!stack || !stack->head)
+		return (NULL);
+	current = stack->head;
+	max_node = current;
+	while (current)
+	{
+		if (current->value > max_node->value)
+			max_node = current;
+	}
+	return (max_node);
+}
+
+void	sort_three(t_context *context)
+{
+	t_node	*biggest_node;
+	t_stack	*a;
+
+	a = &context->a;
+	biggest_node = find_max(a);
+	if (biggest_node == a->head)
+		ra(context);
+	else if (a->head->next == biggest_node)
+		rra(context);
+	if (a->head->value > a->head->next->value)
+		sa(context);
 }
