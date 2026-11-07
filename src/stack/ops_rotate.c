@@ -6,13 +6,14 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 14:22:12 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/07 14:54:39 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/07 15:00:11 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /*
+SILENT CORE
 Rotates the top node to the bottom
 Returns 1, 0 if size is less than 2
 */

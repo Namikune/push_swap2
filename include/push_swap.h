@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/07 14:54:29 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/07 15:06:25 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_context
 void	emit(t_operation operation, t_context *context);
 /*Index*/
 void	rank_numbers(t_stack *stack);
-/*Stack*/
+/*Stack - Utils*/
 t_node	*node_new(int value);
 void	stack_push_top(t_stack *stack, t_node *node);
 t_node	*stack_pop_top(t_stack *stack);
@@ -106,5 +106,10 @@ int		rotate_top(t_stack *stack);
 void	ra(t_context *context);
 void	rb(t_context *context);
 void	rr(t_context *context);
+/*Stack - Reverse Rotations*/
+int		rrotate_top(t_stack *stack);
+void	rra(t_context *context);
+void	rrb(t_context *context);
+void	rrr(t_context *context);
 
 #endif

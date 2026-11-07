@@ -6,13 +6,16 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/06 12:49:42 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/07 14:55:18 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/07 15:00:41 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-/*If stack has atleast 2 nodes, swap the top two*/
+/*
+SILENT CORE
+If stack has atleast 2 nodes, swap the top two
+*/
 int	swap_top(t_stack *stack)
 {
 	t_node	*node_a;
