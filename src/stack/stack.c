@@ -6,15 +6,16 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/29 13:57:34 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/31 16:31:02 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/03 21:52:17 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /*
-Adds a new node to the stack
-index = -1 means "no rank yet" for the new node
+Creates a new node
+index = -1 means "no rank yet"
+The Turk fields start at zero, false or NULL
 */
 t_node	*node_new(int value)
 {
@@ -24,21 +25,33 @@ t_node	*node_new(int value)
 	if (!node)
 		return (NULL);
 	node->value = value;
-	node->next = NULL;
 	node->index = -1;
+	node->push_cost = 0;
+	node->above_median = false;
+	node->cheapest = false;
+	node->target_node = NULL;
+	node->next = NULL;
+	node->prev = NULL;
 	return (node);
 }
 
-/*Puts the node on top of the stack and adds 1 to size*/
+/*
+Puts the node on top of the stack and adds 1 to size
+The old top (if there is one) now has the new node above it
+*/
 void	stack_push_top(t_stack *stack, t_node *node)
 {
+	node->prev = NULL;
 	node->next = stack->head;
+	if (stack->head != NULL)
+		stack->head->prev = node;
 	stack->head = node;
 	stack->size += 1;
 }
 
 /*
 -Detaches and returns the stack's top node
+-The new top has no node above it anymore
 -Subtracts 1 from size
 -Returns NULL if stack is empty
 */
@@ -50,7 +63,10 @@ t_node	*stack_pop_top(t_stack *stack)
 		return (NULL);
 	top_node = stack->head;
 	stack->head = top_node->next;
+	if (stack->head != NULL)
+		stack->head->prev = NULL;
 	top_node->next = NULL;
+	top_node->prev = NULL;
 	stack->size -= 1;
 	return (top_node);
 }
@@ -74,7 +90,7 @@ t_node	*stack_last(t_stack *stack)
 }
 
 /*
-Frees ever node in the stack
+Frees every node in the stack
 Sets stack's size to zero
 */
 void	stack_free(t_stack *stack)

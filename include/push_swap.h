@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/31 16:25:21 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/07 15:06:25 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 # include <unistd.h>
 # include <limits.h>
 # include <libft.h>
-//john just pushed
+# include <stdbool.h>
+
 typedef enum e_operation
 {
 	OP_SA,
@@ -41,11 +42,17 @@ typedef enum e_strategy
 	COMPLEX
 }	t_strategy;
 
+/*Added extra fields for turk sort*/
 typedef struct s_node
 {
 	int				value;
 	int				index;
+	int				push_cost;
+	bool			above_median;
+	bool			cheapest;
+	struct s_node	*target_node;
 	struct s_node	*next;
+	struct s_node	*prev;
 }	t_node;
 
 typedef struct s_stack
@@ -78,12 +85,31 @@ typedef struct s_context
 void	emit(t_operation operation, t_context *context);
 /*Index*/
 void	rank_numbers(t_stack *stack);
-/*Stack*/
+/*Stack - Utils*/
 t_node	*node_new(int value);
 void	stack_push_top(t_stack *stack, t_node *node);
 t_node	*stack_pop_top(t_stack *stack);
 t_node	*stack_last(t_stack *stack);
 void	stack_free(t_stack *stack);
-
+int		stack_is_sorted(t_stack *stack);
+int		swap_top(t_stack *stack);
+/*Stack - Swap operations*/
+void	sa(t_context *context);
+void	sb(t_context *context);
+void	ss(t_context *context);
+/*Stack - Pushing operations*/
+int		push_top(t_stack *from, t_stack *to);
+void	pa(t_context *context);
+void	pb(t_context *context);
+/*Stack - Rotations*/
+int		rotate_top(t_stack *stack);
+void	ra(t_context *context);
+void	rb(t_context *context);
+void	rr(t_context *context);
+/*Stack - Reverse Rotations*/
+int		rrotate_top(t_stack *stack);
+void	rra(t_context *context);
+void	rrb(t_context *context);
+void	rrr(t_context *context);
 
 #endif
