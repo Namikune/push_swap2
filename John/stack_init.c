@@ -6,11 +6,11 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/01 13:26:47 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/06 09:17:07 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/07 18:37:04 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/push_swap.h"
+#include "push_swap.h"
 
 static int	ft_isdigit(int c)
 {
@@ -46,22 +46,26 @@ long	ft_atol(const char *s, int *error)
 	return (result * sign);
 }
 
-void	init_stack_a(t_stack_node **a, char **argv)
+void	init_stack_a(t_context *context, char **argv, int argc, int start_idx)
 {
 	long	n;
 	int		i;
+	int		error;
+	t_node	*new_node;
 
-	i = 0;
-	while (argv[i])
+	i = argc - 1;
+	while (1 >= start_idx)
 	{
+		error = 0;
 		if (error_syntax(argv[i]))
-			free_errors(a);
-		n = ft_atol(argv[i]);
-		if (n > INT_MAX || n < INT_MIN)
-			free_errors(a);
-		if (error_duplicate(*a, (int)n))
-			free_errors(a);
-		append_node(a, (int)n);
-		i++;
+			free_errors(context);
+		n = ft_atol(argv[i], &error);
+		if (error == 1 || error_duplicate(&context->a, (int)n))
+			free_errors(context);
+		new_node = node_new((int)n);
+		if (!new_node)
+			free_errors(context);
+		stack_pust_top(&context->a, new_node);
+		i--;
 	}
 }
