@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 21:53:20 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/03 21:52:19 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/07 14:20:20 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	stack_is_sorted(t_stack *stack)
 	next_node = node->next;
 	while (next_node != NULL)
 	{
-		if (next_node->value > node->value)
+		if (next_node->value >= node->value)
 		{
 			node = next_node;
 			next_node = next_node->next;
