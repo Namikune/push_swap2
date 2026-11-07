@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/07 14:20:04 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/07 14:54:29 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,10 @@ void	ss(t_context *context);
 int		push_top(t_stack *from, t_stack *to);
 void	pa(t_context *context);
 void	pb(t_context *context);
+/*Stack - Rotations*/
+int		rotate_top(t_stack *stack);
+void	ra(t_context *context);
+void	rb(t_context *context);
+void	rr(t_context *context);
 
 #endif

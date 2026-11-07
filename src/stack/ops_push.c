@@ -6,12 +6,13 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/06 17:44:56 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/07 14:20:22 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/07 14:23:16 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+/*If source stack is not empty, push the top node to destination stack*/
 int	push_top(t_stack *from, t_stack *to)
 {
 	t_node	*node;
