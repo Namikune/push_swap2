@@ -18,7 +18,8 @@ SRCS    = main.c \
           stack/ops_rrorate.c \
           stack/ops_swap.c \
           stack/stack_utils.c \
-          stack/stack.c
+          stack/stack.c \
+          input/flags.c
 OBJS    = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 all: $(NAME)
