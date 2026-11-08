@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 16:40:28 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 17:12:40 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/08 18:33:09 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ int	main(int argc, char **argv)
 		return (1);
 	init_context(&context);
 	args = get_args(argc, argv, &is_allocated, &start_idx);
+	parse_flags(argc, argv, &context); //ADDED FLAG PARSER BEFORE PARSER
 	init_stack_a(&context, args, start_idx);
 	if (is_allocated)
 		free_split(args);

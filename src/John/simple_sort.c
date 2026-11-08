@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 17:48:05 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 16:33:27 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/08 18:17:11 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static t_node	*find_min(t_stack *stack)
 	t_node	*current;
 	t_node	*min_node;
 
-	if(!stack || !stack->head)
+	if (!stack || !stack->head)
 		return (NULL);
 	current = stack->head;
 	min_node = current;
-	while(current)
+	while (current)
 	{
 		if (current->value < min_node->value)
 			min_node = current;

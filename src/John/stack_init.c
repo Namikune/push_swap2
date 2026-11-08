@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/01 13:26:47 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 16:33:37 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/08 18:38:48 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	init_stack_a(t_context *context, char **argv, int start_idx)
 		i++;
 	while (--i >= start_idx)
 	{
+		if (ft_strncmp(argv[i], "--", 2) == 0)//IGNORES FLAGS
+			continue ;
 		error = 0;
 		if (error_syntax(argv[i]))
 			free_errors(context);
