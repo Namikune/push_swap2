@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 16:40:28 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 18:33:09 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/08 18:50:21 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ static char	**get_args(int argc, char **argv, int *allocated, int *start_idx)
 	{
 		args = argv;
 		*start_idx = 1;
-		if (ft_strncmp(args[1], "--", 2) == 0)
-			*start_idx = 2;
+		// if (ft_strncmp(args[1], "--", 2) == 0)
+		// 	*start_idx = 2; NOT NECESSARY, PARSE_FLAGS DOES THIS
 	}
 	return (args);
 }
@@ -88,8 +88,8 @@ int	main(int argc, char **argv)
 	if (argc == 1 || (argc == 2 && !argv[1][0]))
 		return (1);
 	init_context(&context);
-	args = get_args(argc, argv, &is_allocated, &start_idx);
 	parse_flags(argc, argv, &context); //ADDED FLAG PARSER BEFORE PARSER
+	args = get_args(argc, argv, &is_allocated, &start_idx);
 	init_stack_a(&context, args, start_idx);
 	if (is_allocated)
 		free_split(args);
