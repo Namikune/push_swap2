@@ -6,7 +6,7 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/07 18:39:55 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/08 12:18:52 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ int			error_duplicate(t_stack *a, int n);
 void		free_errors(t_context *context);
 t_node		*find_max(t_stack *stack);
 void		sort_three(t_context *context);
-static int	ft_isdigit(int c);
 long		ft_atol(const char *s, int *error);
-void		init_stack_a(t_context *context, char **argv, int argc, int start_idx);
+void		init_stack_a(t_context *context, char **argv, int start_idx);
+void		simple_sort(t_context *context);
 /*Emit*/
 void		emit(t_operation operation, t_context *context);
 /*Index*/
