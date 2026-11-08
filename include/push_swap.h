@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/08 16:34:57 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/08 16:35:24 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/08 17:03:49 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,7 @@ int			rrotate_top(t_stack *stack);
 void		rra(t_context *context);
 void		rrb(t_context *context);
 void		rrr(t_context *context);
+/*Parsing*/
+void		parse_flags(int argc, char *argv[], t_context *context);
 
 #endif

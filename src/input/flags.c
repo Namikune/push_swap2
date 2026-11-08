@@ -6,12 +6,17 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/08 14:37:42 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/08 16:36:10 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/08 17:09:24 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+/*
+Reads the text after "--" and stores it into config
+If text after "--" is not one of the 5 options, return Error
+If 2 or more strategy flags are inputed, the LAST ONE is picked
+*/
 void	parse_flags(int argc, char *argv[], t_context *context)
 {
 	t_config	*config;
