@@ -6,7 +6,19 @@ LIBFT   = libft/libft.a
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRCS    = main.c
+SRCS    = main.c \
+          John/handle_errors.c \
+          John/simple_sort.c \
+          John/sort_three.c \
+          John/stack_init.c \
+          sort/rank_numbers.c \
+          stack/emit.c \
+          stack/ops_push.c \
+          stack/ops_rotate.c \
+          stack/ops_rrorate.c \
+          stack/ops_swap.c \
+          stack/stack_utils.c \
+          stack/stack.c
 OBJS    = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 all: $(NAME)

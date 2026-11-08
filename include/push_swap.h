@@ -6,7 +6,11 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/11/08 16:14:04 by hadinh           ###   ########.fr       */
+=======
+/*   Updated: 2026/11/08 12:18:52 by johtadro         ###   ########.fr       */
+>>>>>>> befa6a28648ee9c7310828225e97f6f8c1b41952
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +91,9 @@ int			error_duplicate(t_stack *a, int n);
 void		free_errors(t_context *context);
 t_node		*find_max(t_stack *stack);
 void		sort_three(t_context *context);
-static int	ft_isdigit(int c);
 long		ft_atol(const char *s, int *error);
-void		init_stack_a(t_context *context, char **argv, int argc, int start_idx);
+void		init_stack_a(t_context *context, char **argv, int start_idx);
+void		simple_sort(t_context *context);
 /*Emit*/
 void		emit(t_operation operation, t_context *context);
 /*Index*/
