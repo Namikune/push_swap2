@@ -20,7 +20,7 @@ SRCS    = main.c \
           stack/stack_utils.c \
           stack/stack.c \
           input/flags.c \
-          bench/disorder \
+          bench/disorder
 OBJS    = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 all: $(NAME)
