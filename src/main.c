@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 16:40:28 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 18:50:21 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/09 19:36:07 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int	main(int argc, char **argv)
 	init_stack_a(&context, args, start_idx);
 	if (is_allocated)
 		free_split(args);
+	disorder(&context); //CALLS DISORDER
 	dispatch_sort(&context);
 	stack_free(&context.a);
 	return (0);

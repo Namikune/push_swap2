@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nami <nami@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/08 22:44:44 by nami              #+#    #+#             */
-/*   Updated: 2026/11/08 23:21:15 by nami             ###   ########.fr       */
+/*   Updated: 2026/11/09 19:34:52 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /*
+JOHN ALREADY IMPLEMENTED DISPATCH - DELETE LATER
 Runs the strategy:
 -if sorted, returns nothing (0 or 1 number)
 -if 2 numbers, swap a (sa)

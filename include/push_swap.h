@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nami <nami@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/08 16:34:57 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/08 23:27:30 by nami             ###   ########.fr       */
+/*   Updated: 2026/11/09 19:28:04 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,4 +122,7 @@ void		rrb(t_context *context);
 void		rrr(t_context *context);
 /*Parsing*/
 void		parse_flags(int argc, char *argv[], t_context *context);
+/*Disorder*/
+long		disorder(t_context	*context);
+
 #endif
