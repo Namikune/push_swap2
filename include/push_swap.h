@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/08 16:34:57 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/09 19:28:04 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/10 22:33:57 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,15 @@ typedef struct s_stack
 typedef struct s_configuration
 {
 	t_strategy	strategy;
+	t_strategy	chosen_strategy;
 	int			bench;
 }	t_config;
 
 typedef struct s_statistics
 {
-	int	ops[11];
-	int	total;
+	int		ops[11];
+	int		total;
+	long	disorder_value;
 }	t_stats;
 
 typedef struct s_context
@@ -91,6 +93,7 @@ long		ft_atol(const char *s, int *error);
 void		init_stack_a(t_context *context, char **argv, int start_idx);
 void		simple_sort(t_context *context);
 /*Emit*/
+char		*operation_name(t_operation operation);
 void		emit(t_operation operation, t_context *context);
 /*Index*/
 void		rank_numbers(t_stack *stack);
@@ -124,5 +127,9 @@ void		rrr(t_context *context);
 void		parse_flags(int argc, char *argv[], t_context *context);
 /*Disorder*/
 long		disorder(t_context	*context);
+/*Dispatch*/
+void		dispatch_sort(t_context *context);
+/*Bench*/
+void		bench(t_context *context);
 
 #endif
