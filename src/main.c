@@ -6,7 +6,7 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 16:40:28 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 11:34:25 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/12 12:27:10 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	dispatch_sort(t_context *context)
 		sort_three(context);
 	else
 	{
-		simple_sort(context);
+		medium_sort(context);
 	}
 }
 

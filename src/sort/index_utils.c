@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rank_numbers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/22 14:18:48 by hadinh            #+#    #+#             */
-/*   Updated: 2026/10/30 21:59:47 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/12 11:52:31 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,55 @@ void	rank_numbers(t_stack *stack)
 		node->index = node_index;
 		node = node->next;
 	}
+}
+
+t_node	*find_min(t_stack *stack)
+{
+	t_node	*current;
+	t_node	*min_node;
+
+	if(!stack || !stack->head)
+		return (NULL);
+	current = stack->head;
+	min_node = current;
+	while(current)
+	{
+		if (current->value < min_node->value)
+			min_node = current;
+		current = current->next;
+	}
+	return (min_node);
+}
+
+int	get_node_position(t_stack *stack, t_node *target)
+{
+	t_node	*current;
+	int		pos;
+	
+	pos = 0;
+	current = stack->head;
+	while (current && current != target)
+	{
+		pos++;
+		current = current->next;
+	}
+	return (pos);
+}
+
+t_node	*find_max(t_stack *stack)
+{
+	t_node	*current;
+	t_node	*max_node;
+
+	if (!stack || !stack->head)
+		return (NULL);
+	current = stack->head;
+	max_node = current;
+	while (current)
+	{
+		if (current->value > max_node->value)
+			max_node = current;
+		current = current->next;
+	}
+	return (max_node);
 }
