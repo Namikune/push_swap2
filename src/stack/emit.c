@@ -6,13 +6,13 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:40:24 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/03 21:52:24 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/10 22:33:14 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static char	*operation_name(t_operation operation)
+char	*operation_name(t_operation operation)
 {
 	if (operation == OP_SA)
 		return ("sa");

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 16:40:28 by johtadro          #+#    #+#             */
 /*   Updated: 2026/11/12 12:27:10 by johtadro         ###   ########.fr       */
@@ -15,14 +15,16 @@
 static void	init_context(t_context *context)
 {
 	int	i;
-	
+
 	context->a.head = NULL;
 	context->a.size = 0;
 	context->b.head = NULL;
 	context->b.size = 0;
-	context->cofig.strategy = ADAPTIVE;
-	context->cofig.bench = 0;
+	context->config.strategy = ADAPTIVE;
+	context->config.bench = 0;
+	context->config.chosen_strategy = ADAPTIVE;
 	context->stats.total = 0;
+	context->stats.disorder_value = 0;
 	i = 0;
 	while (i < 11)
 		context->stats.ops[i++] = 0;
@@ -58,8 +60,6 @@ static char	**get_args(int argc, char **argv, int *allocated, int *start_idx)
 	{
 		args = argv;
 		*start_idx = 1;
-		if (ft_strncmp(args[1], "--", 2) == 0)
-			*start_idx = 2;
 	}
 	return (args);
 }
@@ -88,11 +88,14 @@ int	main(int argc, char **argv)
 	if (argc == 1 || (argc == 2 && !argv[1][0]))
 		return (1);
 	init_context(&context);
+	parse_flags(argc, argv, &context);
 	args = get_args(argc, argv, &is_allocated, &start_idx);
 	init_stack_a(&context, args, start_idx);
 	if (is_allocated)
 		free_split(args);
 	dispatch_sort(&context);
+	if (context.config.bench == 1)
+		bench(&context);
 	stack_free(&context.a);
 	return (0);
 }

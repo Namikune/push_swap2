@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/01 16:41:42 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/07 18:00:45 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/08 16:33:30 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ int	error_duplicate(t_stack *a, int n)
 {
 	t_node	*current;
 
-	if(!a || !a->head)
+	if (!a || !a->head)
 		return (0);
 	current = a->head;
 	while (current)
 	{
-		if(current->value == n)
+		if (current->value == n)
 			return (1);
 		current = current->next;
 	}

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
 /*   Updated: 2026/11/12 12:03:22 by johtadro         ###   ########.fr       */
@@ -64,20 +64,22 @@ typedef struct s_stack
 typedef struct s_configuration
 {
 	t_strategy	strategy;
+	t_strategy	chosen_strategy;
 	int			bench;
 }	t_config;
 
 typedef struct s_statistics
 {
-	int	ops[11];
-	int	total;
+	int		ops[11];
+	int		total;
+	long	disorder_value;
 }	t_stats;
 
 typedef struct s_context
 {
 	t_stack		a;
 	t_stack		b;
-	t_config	cofig;
+	t_config	config;
 	t_stats		stats;
 }	t_context;
 
@@ -91,6 +93,7 @@ void		init_stack_a(t_context *context, char **argv, int start_idx);
 void		simple_sort(t_context *context);
 void		medium_sort(t_context	*context);
 /*Emit*/
+char		*operation_name(t_operation operation);
 void		emit(t_operation operation, t_context *context);
 /*Index*/
 void		rank_numbers(t_stack *stack);
@@ -123,5 +126,13 @@ int			rrotate_top(t_stack *stack);
 void		rra(t_context *context);
 void		rrb(t_context *context);
 void		rrr(t_context *context);
+/*Parsing*/
+void		parse_flags(int argc, char *argv[], t_context *context);
+/*Disorder*/
+long		disorder(t_context	*context);
+/*Dispatch*/
+void		dispatch_sort(t_context *context);
+/*Bench*/
+void		bench(t_context *context);
 
 #endif
