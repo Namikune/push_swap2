@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/08 16:34:57 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/10 22:33:57 by hadinh           ###   ########.fr       */
+/*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/12 12:03:22 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,16 +87,19 @@ typedef struct s_context
 int			error_syntax(char *str);
 int			error_duplicate(t_stack *a, int n);
 void		free_errors(t_context *context);
-t_node		*find_max(t_stack *stack);
 void		sort_three(t_context *context);
 long		ft_atol(const char *s, int *error);
 void		init_stack_a(t_context *context, char **argv, int start_idx);
 void		simple_sort(t_context *context);
+void		medium_sort(t_context	*context);
 /*Emit*/
 char		*operation_name(t_operation operation);
 void		emit(t_operation operation, t_context *context);
 /*Index*/
 void		rank_numbers(t_stack *stack);
+t_node		*find_min(t_stack *stack);
+t_node		*find_max(t_stack *stack);
+int			get_node_position(t_stack *stack, t_node *target);
 /*Stack - Utils*/
 t_node		*node_new(int value);
 void		stack_push_top(t_stack *stack, t_node *node);

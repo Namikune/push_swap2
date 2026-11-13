@@ -6,44 +6,11 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 17:48:05 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 18:17:11 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/12 11:51:53 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-static t_node	*find_min(t_stack *stack)
-{
-	t_node	*current;
-	t_node	*min_node;
-
-	if (!stack || !stack->head)
-		return (NULL);
-	current = stack->head;
-	min_node = current;
-	while (current)
-	{
-		if (current->value < min_node->value)
-			min_node = current;
-		current = current->next;
-	}
-	return (min_node);
-}
-
-static int	get_node_position(t_stack *stack, t_node *target)
-{
-	t_node	*current;
-	int		pos;
-
-	pos = 0;
-	current = stack->head;
-	while (current && current != target)
-	{
-		pos++;
-		current = current->next;
-	}
-	return (pos);
-}
 
 void	simple_sort(t_context *context)
 {
