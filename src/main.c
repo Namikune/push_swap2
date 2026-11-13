@@ -6,7 +6,7 @@
 /*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 16:40:28 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/12 12:27:10 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/13 17:03:52 by hadinh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,20 +62,6 @@ static char	**get_args(int argc, char **argv, int *allocated, int *start_idx)
 		*start_idx = 1;
 	}
 	return (args);
-}
-
-static void	dispatch_sort(t_context *context)
-{
-	if (stack_is_sorted(&context->a))
-		return ;
-	if (context->a.size == 2)
-		sa(context);
-	else if (context->a.size == 3)
-		sort_three(context);
-	else
-	{
-		medium_sort(context);
-	}
 }
 
 int	main(int argc, char **argv)
