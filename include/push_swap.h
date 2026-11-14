@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/12 12:03:22 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/14 16:54:15 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,18 @@ typedef struct s_context
 int			error_syntax(char *str);
 int			error_duplicate(t_stack *a, int n);
 void		free_errors(t_context *context);
+void		free_split(char **split_arr);
+void		init_stack_a(t_context *context, char **argv, int start_idx);
 void		sort_three(t_context *context);
 long		ft_atol(const char *s, int *error);
-void		init_stack_a(t_context *context, char **argv, int start_idx);
 void		simple_sort(t_context *context);
 void		medium_sort(t_context	*context);
+void		complex_sort(t_context *context);
+void		set_target_a_to_b(t_stack *a, t_stack *b);
+void		set_target_b_to_a(t_stack *b, t_stack *a);
+void		calculate_costs(t_stack *a, t_stack *b);
+void		set_cheapest(t_stack *a);
+void		push_cheapest_to_b(t_context *context);
 /*Emit*/
 char		*operation_name(t_operation operation);
 void		emit(t_operation operation, t_context *context);

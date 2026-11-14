@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   stack_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 21:53:20 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/07 14:20:20 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/14 15:26:10 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
 /*
 Returns 1 if stack is sorted.
 Returns 1 if stack is empty.

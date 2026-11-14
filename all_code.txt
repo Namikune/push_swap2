@@ -1,0 +1,1654 @@
+==> include/push_swap.h <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/19 16:33:41 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/14 15:36:29 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PUSH_SWAP_H
+# define PUSH_SWAP_H
+
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include <libft.h>
+# include <stdbool.h>
+
+typedef enum e_operation
+{
+	OP_SA,
+	OP_SB,
+	OP_SS,
+	OP_PA,
+	OP_PB,
+	OP_RA,
+	OP_RB,
+	OP_RR,
+	OP_RRA,
+	OP_RRB,
+	OP_RRR
+}	t_operation;
+
+typedef enum e_strategy
+{
+	ADAPTIVE,
+	SIMPLE,
+	MEDIUM,
+	COMPLEX
+}	t_strategy;
+
+/*Added extra fields for turk sort*/
+typedef struct s_node
+{
+	int				value;
+	int				index;
+	int				push_cost;
+	bool			above_median;
+	bool			cheapest;
+	struct s_node	*target_node;
+	struct s_node	*next;
+	struct s_node	*prev;
+}	t_node;
+
+typedef struct s_stack
+{
+	t_node	*head;
+	int		size;
+}	t_stack;
+
+typedef struct s_configuration
+{
+	t_strategy	strategy;
+	t_strategy	chosen_strategy;
+	int			bench;
+}	t_config;
+
+typedef struct s_statistics
+{
+	int		ops[11];
+	int		total;
+	long	disorder_value;
+}	t_stats;
+
+typedef struct s_context
+{
+	t_stack		a;
+	t_stack		b;
+	t_config	config;
+	t_stats		stats;
+}	t_context;
+
+/*John's*/
+int			error_syntax(char *str);
+int			error_duplicate(t_stack *a, int n);
+void		free_errors(t_context *context, char **split_arr);
+void		free_split(char **split_arr);
+void		init_stack_a(t_context *context, char **argv);
+void		sort_three(t_context *context);
+long		ft_atol(const char *s, int *error);
+void		simple_sort(t_context *context);
+void		medium_sort(t_context	*context);
+void		complex_sort(t_context *context);
+void		set_target_a_to_b(t_stack *a, t_stack *b);
+void		set_target_b_to_a(t_stack *b, t_stack *a);
+void		calculate_costs(t_stack *a, t_stack *b);
+void		set_cheapest(t_stack *a);
+void		push_cheapest_to_b(t_context *context);
+/*Emit*/
+char		*operation_name(t_operation operation);
+void		emit(t_operation operation, t_context *context);
+/*Index*/
+void		rank_numbers(t_stack *stack);
+t_node		*find_min(t_stack *stack);
+t_node		*find_max(t_stack *stack);
+int			get_node_position(t_stack *stack, t_node *target);
+/*Stack - Utils*/
+t_node		*node_new(int value);
+void		stack_push_top(t_stack *stack, t_node *node);
+t_node		*stack_pop_top(t_stack *stack);
+t_node		*stack_last(t_stack *stack);
+void		stack_free(t_stack *stack);
+int			stack_is_sorted(t_stack *stack);
+int			swap_top(t_stack *stack);
+/*Stack - Swap operations*/
+void		sa(t_context *context);
+void		sb(t_context *context);
+void		ss(t_context *context);
+/*Stack - Pushing operations*/
+int			push_top(t_stack *from, t_stack *to);
+void		pa(t_context *context);
+void		pb(t_context *context);
+/*Stack - Rotations*/
+int			rotate_top(t_stack *stack);
+void		ra(t_context *context);
+void		rb(t_context *context);
+void		rr(t_context *context);
+/*Stack - Reverse Rotations*/
+int			rrotate_top(t_stack *stack);
+void		rra(t_context *context);
+void		rrb(t_context *context);
+void		rrr(t_context *context);
+/*Parsing*/
+void		parse_flags(int argc, char *argv[], t_context *context);
+/*Disorder*/
+long		disorder(t_context	*context);
+/*Dispatch*/
+void		dispatch_sort(t_context *context);
+/*Bench*/
+void		bench(t_context *context);
+
+#endif
+
+==> src/John/complex_sort.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   complex_sort.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/14 11:23:05 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 15:18:31 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static void	push_b_to_a_target(t_context *context)
+{
+	t_node	*target;
+
+	target = context->b.head->target_node;
+	while (context->a.head != target)
+	{
+		if (get_node_position(&context->a, target) <= context->a.size / 2)
+			ra(context);
+		else
+			rra(context);
+	}
+	pa(context);
+}
+
+static void	final_alignment(t_context *context)
+{
+	t_node	*min_node;
+
+	min_node = find_min(&context->a);
+	while (context->a.head != min_node)
+	{
+		if (get_node_position(&context->a, min_node) <= context->a.size / 2)
+			ra(context);
+		else
+			rra(context);
+	}
+}
+
+void	complex_sort(t_context *context)
+{
+	rank_numbers(&context->a);
+	if (context->a.size > 3 && !stack_is_sorted(&context->a))
+		pb(context);
+	if (context->a.size > 3 && !stack_is_sorted(&context->a))
+		pb(context);
+	while (context->a.size > 3 && !stack_is_sorted(&context->a))
+	{
+		set_target_a_to_b(&context->a, &context->b);
+		calculate_costs(&context->a, &context->b);
+		set_cheapest(&context->a);
+		push_cheapest_to_b(context);
+	}
+	if (!stack_is_sorted(&context->a))
+		sort_three(context);
+	while (context->b.size > 0)
+	{
+		set_target_b_to_a(&context->b, &context->a);
+		push_b_to_a_target(context);
+	}
+	final_alignment(context);
+}
+
+==> src/John/handle_errors.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_errors.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/01 16:41:42 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 15:37:56 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+int	error_syntax(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !*str)
+		return (1);
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (!ft_isdigit(str[i + 1]))
+			return (1);
+		i++;
+	}
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	error_duplicate(t_stack *a, int n)
+{
+	t_node	*current;
+
+	if (!a || !a->head)
+		return (0);
+	current = a->head;
+	while (current)
+	{
+		if (current->value == n)
+			return (1);
+		current = current->next;
+	}
+	return (0);
+}
+
+void	free_split(char **split_arr)
+{
+	int	i;
+
+	i = 0;
+	if (!split_arr)
+		return ;
+	while (split_arr[i])
+	{
+		free(split_arr[i]);
+		i++;
+	}
+	free(split_arr);
+}
+
+void	free_errors(t_context *context, char **split_arr)
+{
+	if (split_arr)
+		free_split(split_arr);
+	stack_free(&context->a);
+	stack_free(&context->b);
+	write(2, "Error\n", 6);
+	exit(1);
+}
+==> src/John/medium_sort.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   medium_sort.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/12 11:21:48 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 15:24:35 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static int	get_chunk_size(int size)
+{
+	if (size < 100)
+		return (15);
+	else if (size <= 250)
+		return (25);
+	else
+		return (35);
+}
+
+static void	push_chunks_to_b(t_context *context, int chunk_size)
+{
+	int	i;
+
+	i = 0;
+	while (context->a.size > 0)
+	{
+		if (context->a.head->index <= i)
+		{
+			pb(context);
+			rb(context);
+			i++;
+		}
+		else if (context->a.head->index <= i + chunk_size)
+		{
+			pb(context);
+			i++;
+		}
+		else
+			ra(context);
+	}
+}
+
+static void	push_back_to_a(t_context *context)
+{
+	t_node	*max_node;
+	int		pos;
+
+	while (context->b.head != NULL)
+	{
+		max_node = find_max(&context->b);
+		pos = get_node_position(&context->b, max_node);
+		while (context->b.head != max_node)
+		{
+			if (pos <= (context->b.size / 2))
+				rb(context);
+			else
+				rrb(context);
+		}
+		pa(context);
+	}
+}
+
+void	medium_sort(t_context *context)
+{
+	int	chunk_size;
+
+	rank_numbers(&context->a);
+	chunk_size = get_chunk_size(context->a.size);
+	push_chunks_to_b(context, chunk_size);
+	push_back_to_a(context);
+}
+
+==> src/John/simple_sort.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   simple_sort.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/07 17:48:05 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/12 11:51:53 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+void	simple_sort(t_context *context)
+{
+	t_node	*min_node;
+	int		pos;
+
+	while (context->a.size > 3)
+	{
+		min_node = find_min(&context->a);
+		pos = get_node_position(&context->a, min_node);
+		while (context->a.head != min_node)
+		{
+			if (pos <= (context->a.size / 2))
+				ra(context);
+			else
+				rra(context);
+		}
+		pb(context);
+	}
+	if (context->a.size == 3)
+		sort_three(context);
+	while (context->b.head != NULL)
+		pa(context);
+}
+
+==> src/John/sort_three.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_three.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/31 17:43:38 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/12 11:52:25 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+void	sort_three(t_context *context)
+{
+	t_node	*biggest_node;
+	t_stack	*a;
+
+	a = &context->a;
+	biggest_node = find_max(a);
+	if (biggest_node == a->head)
+		ra(context);
+	else if (a->head->next == biggest_node)
+		rra(context);
+	if (a->head->value > a->head->next->value)
+		sa(context);
+}
+
+==> src/John/stack_init.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack_init.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/01 13:26:47 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 15:37:27 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+long	ft_atol(const char *s, int *error)
+{
+	long	result;
+	int		sign;
+
+	result = 0;
+	sign = 1;
+	while (*s == ' ' || (*s >= 9 && *s <= 13))
+		s++;
+	if (*s == '+' || *s == '-')
+	{
+		if (*s == '-')
+			sign = -1;
+		s++;
+	}
+	if (!ft_isdigit(*s))
+		return (*error = 1, 0);
+	while (ft_isdigit(*s))
+	{
+		result = result * 10 + (*s - '0');
+		if ((result * sign) > INT_MAX || (result * sign) < INT_MIN)
+			return (*error = 1, 0);
+		s++;
+	}
+	if (*s != '\0')
+		return (*error = 1, 0);
+	return (result * sign);
+}
+
+static void	push_words(t_context *context, char **words)
+{
+	int		j;
+	long	n;
+	int		error;
+	t_node	*new_node;
+
+	j = 0;
+	while (words[j])
+		j++;
+	while (--j >= 0)
+	{
+		error = 0;
+		if (error_syntax(words[j]))
+			free_errors(context, words);
+		n = ft_atol(words[j], &error);
+		if (error == 1 || error_duplicate(&context->a, (int)n))
+			free_errors(context, words);
+		new_node = node_new((int)n);
+		if (!new_node)
+			free_errors(context, words);
+		stack_push_top(&context->a, new_node);
+	}
+}
+
+void	init_stack_a(t_context *context, char **argv)
+{
+	int		i;
+	char	**words;
+
+	i = 0;
+	while (argv[i])
+		i++;
+	while (--i >= 1)
+	{
+		if (ft_strncmp(argv[i], "--", 2) == 0)
+			continue ;
+		words = ft_split(argv[i], ' ');
+		if (!words || !words[0])
+			free_errors(context, words);
+		push_words(context, words);
+		free_split(words);
+	}
+}
+
+==> src/John/turk_costs.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   turk_costs.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/14 13:49:25 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 14:59:37 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static int	ft_abs(int n)
+{
+	if (n < 0)
+		return (-n);
+	return (n);
+}
+
+static int	get_max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+void	calculate_costs(t_stack *a, t_stack *b)
+{
+	t_node	*curr;
+	int		pos_a;
+	int		pos_b;
+
+	curr = a->head;
+	while (curr)
+	{
+		pos_a = get_node_position(a, curr);
+		if (pos_a > a->size / 2)
+			pos_a -= a->size;
+		pos_b = get_node_position(b, curr->target_node);
+		if (pos_b > b->size / 2)
+			pos_b -= b->size;
+		if ((pos_a >= 0 && pos_b >= 0) || (pos_a < 0 && pos_b < 0))
+			curr->push_cost = get_max(ft_abs(pos_a), ft_abs(pos_b));
+		else
+			curr->push_cost = ft_abs(pos_a) + ft_abs(pos_b);
+		curr = curr->next;
+	}
+}
+
+void	set_cheapest(t_stack *a)
+{
+	long	min_cost;
+	t_node	*curr;
+	t_node	*cheapest_node;
+
+	min_cost = LONG_MAX;
+	cheapest_node = NULL;
+	curr = a->head;
+	while (curr)
+	{
+		curr->cheapest = false;
+		if (curr->push_cost <= min_cost)
+		{
+			min_cost = curr->push_cost;
+			cheapest_node = curr;
+		}
+		curr = curr->next;
+	}
+	if (cheapest_node)
+		cheapest_node->cheapest = true;
+}
+
+==> src/John/turk_exec.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   turk_exec.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/14 14:16:43 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 14:36:38 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static void	rotate_a_to_top(t_context *context, t_node *node)
+{
+	while (context->a.head != node)
+	{
+		if (get_node_position(&context->a, node) <= context->a.size / 2)
+			ra(context);
+		else
+			rra(context);
+	}
+}
+
+static void	rotate_b_to_top(t_context *context, t_node *node)
+{
+	while (context->b.head != node)
+	{
+		if (get_node_position(&context->b, node) <= context->b.size / 2)
+			rb(context);
+		else
+			rrb(context);
+	}
+}
+
+void	push_cheapest_to_b(t_context *context)
+{
+	t_node	*cheap;
+	int		pos_a;
+	int		pos_b;
+
+	cheap = context->a.head;
+	while (cheap && !cheap->cheapest)
+		cheap = cheap->next;
+	pos_a = get_node_position(&context->a, cheap);
+	pos_b = get_node_position(&context->b, cheap->target_node);
+	if (pos_a <= context->a.size / 2 && pos_b <= context->b.size / 2)
+	{
+		while (context->a.head != cheap
+			&& context->b.head != cheap->target_node)
+			rr(context);
+	}
+	else if (pos_a > context->a.size / 2 && pos_b > context->b.size / 2)
+	{
+		while (context->a.head != cheap
+			&& context->b.head != cheap->target_node)
+			rrr(context);
+	}
+	rotate_a_to_top(context, cheap);
+	rotate_b_to_top(context, cheap->target_node);
+	pb(context);
+}
+
+==> src/John/turk_targets.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   turk_targets.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/14 11:52:31 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 15:23:18 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static t_node	*get_target_for_a(t_node *node_a, t_stack *b)
+{
+	t_node	*curr_b;
+	t_node	*target;
+	int		best_match;
+
+	best_match = -1;
+	target = NULL;
+	curr_b = b->head;
+	while (curr_b)
+	{
+		if (curr_b->index < node_a->index && curr_b->index > best_match)
+		{
+			best_match = curr_b->index;
+			target = curr_b;
+		}
+		curr_b = curr_b->next;
+	}
+	if (best_match == -1)
+		return (find_max(b));
+	return (target);
+}
+
+void	set_target_a_to_b(t_stack *a, t_stack *b)
+{
+	t_node	*curr_a;
+
+	curr_a = a->head;
+	while (curr_a)
+	{
+		curr_a->target_node = get_target_for_a(curr_a, b);
+		curr_a = curr_a->next;
+	}
+}
+
+static t_node	*get_target_for_b(t_node *node_b, t_stack *a)
+{
+	t_node	*curr_a;
+	t_node	*target;
+	int		best_match;
+
+	best_match = INT_MAX;
+	target = NULL;
+	curr_a = a->head;
+	while (curr_a)
+	{
+		if (curr_a->index > node_b->index && curr_a->index < best_match)
+		{
+			best_match = curr_a->index;
+			target = curr_a;
+		}
+		curr_a = curr_a->next;
+	}
+	if (best_match == INT_MAX)
+		return (find_min(a));
+	return (target);
+}
+
+void	set_target_b_to_a(t_stack *b, t_stack *a)
+{
+	t_node	*curr_b;
+
+	curr_b = b->head;
+	while (curr_b)
+	{
+		curr_b->target_node = get_target_for_b(curr_b, a);
+		curr_b = curr_b->next;
+	}
+}
+
+==> src/bench/bench.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bench.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/09 19:53:29 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/14 15:29:47 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*A static helper that prints disorder text to stdder*/
+static void	print_disorder(long disorder)
+{
+	int	disorder_value;
+	int	disorder_remainder;
+
+	disorder_value = disorder / 100;
+	disorder_remainder = disorder % 100;
+	ft_putstr_fd("[bench] disorder: ", 2);
+	ft_putnbr_fd(disorder_value, 2);
+	ft_putchar_fd('.', 2);
+	if (disorder_remainder < 10)
+		ft_putnbr_fd(0, 2);
+	ft_putnbr_fd(disorder_remainder, 2);
+	ft_putchar_fd('%', 2);
+	ft_putendl_fd("", 2);
+}
+
+/*
+Prints the strategy to stderr
+-adaptive: prefix "Adaptive -> ", then the picked strategy
+-forced: only the strategy that ran (chosen_strategy)
+*/
+static void	print_strategy(t_context *context)
+{
+	ft_putstr_fd("[bench] strategy: ", 2);
+	if (context->config.strategy == ADAPTIVE)
+		ft_putstr_fd("Adaptive / ", 2);
+	if (context->config.chosen_strategy == SIMPLE)
+		ft_putstr_fd("O(n²)", 2);
+	if (context->config.chosen_strategy == MEDIUM)
+		ft_putstr_fd("O(n√n)", 2);
+	if (context->config.chosen_strategy == COMPLEX)
+		ft_putstr_fd("O(n log n)", 2);
+	ft_putendl_fd("", 2);
+}
+
+/*Prints the total number of operations to stderr*/
+static void	print_total(t_context *context)
+{
+	ft_putstr_fd("[bench] total_ops: ", 2);
+	ft_putnbr_fd(context->stats.total, 2);
+	ft_putendl_fd("", 2);
+}
+
+/*
+Prints the count of every operation to stderr
+-loops over the 11 slots of stats.ops
+-operation_name (emit.c) gives the text for each slot
+*/
+static void	print_ops(t_context *context)
+{
+	int	i;
+
+	i = 0;
+	while (i < 11)
+	{
+		ft_putstr_fd("[bench] ", 2);
+		ft_putstr_fd(operation_name(i), 2);
+		ft_putstr_fd(": ", 2);
+		ft_putnbr_fd(context->stats.ops[i], 2);
+		ft_putendl_fd("", 2);
+		i++;
+	}
+}
+
+/*
+Puts it all together:
+-Disorder
+-Strategy
+-Total
+-Operations
+*/
+void	bench(t_context *context)
+{
+	print_disorder(context->stats.disorder_value);
+	print_strategy(context);
+	print_total(context);
+	print_ops(context);
+}
+
+==> src/bench/disorder.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   disorder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/09 18:13:00 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/14 15:25:24 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/* A static helper that counts the "mistakes" */
+static int	mistakes_count(t_context *context)
+{
+	t_node	*start;
+	t_node	*next;
+	int		i;
+
+	start = context->a.head;
+	i = 0;
+	while (start->next != NULL)
+	{
+		next = start->next;
+		while (next != NULL)
+		{
+			if (start->value > next->value)
+				i++;
+			next = next->next;
+		}
+		start = start->next;
+	}
+	return (i);
+}
+
+/*
+Calculates disorder via its formula:
+Disorder  =  mistakes × 10,000 / total pairs
+Times 10,000 to turn it into an int for bench to print properly
+*/
+long	disorder(t_context	*context)
+{
+	long	size;
+	long	result;
+	long	mistakes;
+
+	if (context->a.size < 2)
+		return (0);
+	size = context->a.size;
+	mistakes = mistakes_count(context);
+	result = ((mistakes * 10000) / (((size * (size - 1)) / 2)));
+	return (result);
+}
+
+==> src/input/flags.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   flags.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/08 14:37:42 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/14 15:40:50 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+Reads the text after "--" and stores it into config
+If text after "--" is not one of the 5 options, return Error
+If 2 or more strategy flags are inputed, the LAST ONE is picked
+*/
+void	parse_flags(int argc, char *argv[], t_context *context)
+{
+	t_config	*config;
+	int			i;
+
+	config = &context->config;
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_strncmp(argv[i], "--adaptive", 11) == 0)
+			config->strategy = ADAPTIVE;
+		else if (ft_strncmp(argv[i], "--simple", 9) == 0)
+			config->strategy = SIMPLE;
+		else if (ft_strncmp(argv[i], "--medium", 9) == 0)
+			config->strategy = MEDIUM;
+		else if (ft_strncmp(argv[i], "--complex", 10) == 0)
+			config->strategy = COMPLEX;
+		else if (ft_strncmp(argv[i], "--bench", 8) == 0)
+			config->bench = 1;
+		else if (ft_strncmp(argv[i], "--", 2) == 0)
+			free_errors(context, NULL);
+		i++;
+	}
+}
+
+==> src/sort/index_utils.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   index_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/22 14:18:48 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/14 11:41:21 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static int	smaller_nodes_count(t_stack *stack, t_node *node)
+{
+	int		count;
+	t_node	*start;
+
+	start = stack->head;
+	count = 0;
+	while (start != NULL)
+	{
+		if (start->value < node->value)
+			count++;
+		start = start->next;
+	}
+	return (count);
+}
+
+void	rank_numbers(t_stack *stack)
+{
+	t_node	*node;
+	int		node_index;
+
+	node = stack->head;
+	while (node != NULL)
+	{
+		node_index = smaller_nodes_count(stack, node);
+		node->index = node_index;
+		node = node->next;
+	}
+}
+
+t_node	*find_min(t_stack *stack)
+{
+	t_node	*current;
+	t_node	*min_node;
+
+	if (!stack || !stack->head)
+		return (NULL);
+	current = stack->head;
+	min_node = current;
+	while (current)
+	{
+		if (current->value < min_node->value)
+			min_node = current;
+		current = current->next;
+	}
+	return (min_node);
+}
+
+int	get_node_position(t_stack *stack, t_node *target)
+{
+	t_node	*current;
+	int		pos;
+
+	pos = 0;
+	current = stack->head;
+	while (current && current != target)
+	{
+		pos++;
+		current = current->next;
+	}
+	return (pos);
+}
+
+t_node	*find_max(t_stack *stack)
+{
+	t_node	*current;
+	t_node	*max_node;
+
+	if (!stack || !stack->head)
+		return (NULL);
+	current = stack->head;
+	max_node = current;
+	while (current)
+	{
+		if (current->value > max_node->value)
+			max_node = current;
+		current = current->next;
+	}
+	return (max_node);
+}
+
+==> src/stack/emit.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   emit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/19 16:40:24 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/10 22:33:14 by hadinh           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+char	*operation_name(t_operation operation)
+{
+	if (operation == OP_SA)
+		return ("sa");
+	if (operation == OP_SB)
+		return ("sb");
+	if (operation == OP_SS)
+		return ("ss");
+	if (operation == OP_PA)
+		return ("pa");
+	if (operation == OP_PB)
+		return ("pb");
+	if (operation == OP_RA)
+		return ("ra");
+	if (operation == OP_RB)
+		return ("rb");
+	if (operation == OP_RR)
+		return ("rr");
+	if (operation == OP_RRA)
+		return ("rra");
+	if (operation == OP_RRB)
+		return ("rrb");
+	if (operation == OP_RRR)
+		return ("rrr");
+	return ("");
+}
+
+void	emit(t_operation operation, t_context *context)
+{
+	context->stats.ops[operation] += 1;
+	context->stats.total += 1;
+	ft_putendl_fd(operation_name(operation), 1);
+}
+
+==> src/stack/ops_push.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ops_push.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/06 17:44:56 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/07 15:00:26 by hadinh           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+SILENT CORE
+If source stack is not empty, push the top node to destination stack
+*/
+int	push_top(t_stack *from, t_stack *to)
+{
+	t_node	*node;
+
+	if (from->head == NULL)
+		return (0);
+	node = stack_pop_top(from);
+	stack_push_top(to, node);
+	return (1);
+}
+
+void	pa(t_context *context)
+{
+	t_stack	*a;
+	t_stack	*b;
+
+	a = &context->a;
+	b = &context->b;
+	if (push_top(b, a) == 1)
+		emit(OP_PA, context);
+}
+
+void	pb(t_context *context)
+{
+	t_stack	*a;
+	t_stack	*b;
+
+	a = &context->a;
+	b = &context->b;
+	if (push_top(a, b) == 1)
+		emit(OP_PB, context);
+}
+
+==> src/stack/ops_rotate.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ops_rotate.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/07 14:22:12 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/07 15:00:11 by hadinh           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+SILENT CORE
+Rotates the top node to the bottom
+Returns 1, 0 if size is less than 2
+*/
+int	rotate_top(t_stack *stack)
+{
+	t_node	*top_node;
+	t_node	*next;
+	t_node	*bottom_node;
+
+	if (stack->size < 2)
+		return (0);
+	top_node = stack->head;
+	next = top_node->next;
+	bottom_node = stack_last(stack);
+	top_node->prev = bottom_node;
+	bottom_node->next = top_node;
+	top_node->next = NULL;
+	stack->head = next;
+	next->prev = NULL;
+	return (1);
+}
+
+void	ra(t_context *context)
+{
+	t_stack	*a;
+
+	a = &context->a;
+	if (rotate_top(a) == 1)
+		emit(OP_RA, context);
+}
+
+void	rb(t_context *context)
+{
+	t_stack	*b;
+
+	b = &context->b;
+	if (rotate_top(b) == 1)
+		emit(OP_RB, context);
+}
+
+/*Prints if at least one stack rotated*/
+void	rr(t_context *context)
+{
+	t_stack	*a;
+	t_stack	*b;
+	int		rotate_checker_a;
+	int		rotate_checker_b;
+
+	a = &context->a;
+	b = &context->b;
+	rotate_checker_a = rotate_top(a);
+	rotate_checker_b = rotate_top(b);
+	if ((rotate_checker_a == 1) || (rotate_checker_b == 1))
+		emit(OP_RR, context);
+}
+
+==> src/stack/ops_rrorate.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ops_rrorate.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/07 14:56:08 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/07 15:06:27 by hadinh           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+SILENT CORE
+Rotates the bottom node to the top
+Returns 1, 0 if size is less than 2
+*/
+int	rrotate_top(t_stack *stack)
+{
+	t_node	*top_node;
+	t_node	*prev_bottom;
+	t_node	*bottom_node;
+
+	if (stack->size < 2)
+		return (0);
+	top_node = stack->head;
+	bottom_node = stack_last(stack);
+	prev_bottom = bottom_node->prev;
+	bottom_node->next = top_node;
+	prev_bottom->next = NULL;
+	stack->head = bottom_node;
+	top_node->prev = bottom_node;
+	bottom_node->prev = NULL;
+	return (1);
+}
+
+void	rra(t_context *context)
+{
+	t_stack	*a;
+
+	a = &context->a;
+	if (rrotate_top(a) == 1)
+		emit(OP_RRA, context);
+}
+
+void	rrb(t_context *context)
+{
+	t_stack	*b;
+
+	b = &context->b;
+	if (rrotate_top(b) == 1)
+		emit(OP_RRB, context);
+}
+
+/*Prints if at least one stack rrotated*/
+void	rrr(t_context *context)
+{
+	t_stack	*a;
+	t_stack	*b;
+	int		rrotate_checker_a;
+	int		rrotate_checker_b;
+
+	a = &context->a;
+	b = &context->b;
+	rrotate_checker_a = rrotate_top(a);
+	rrotate_checker_b = rrotate_top(b);
+	if ((rrotate_checker_a == 1) || (rrotate_checker_b == 1))
+		emit(OP_RRR, context);
+}
+
+==> src/stack/ops_swap.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ops_swap.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/06 12:49:42 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/07 15:00:41 by hadinh           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+SILENT CORE
+If stack has atleast 2 nodes, swap the top two
+*/
+int	swap_top(t_stack *stack)
+{
+	t_node	*node_a;
+	t_node	*node_b;
+	t_node	*node_c;
+
+	if (stack->size < 2)
+		return (0);
+	node_a = stack->head;
+	node_b = node_a->next;
+	node_c = node_b->next;
+	node_a->prev = node_b;
+	node_b->next = node_a;
+	stack->head = node_b;
+	node_b->prev = NULL;
+	if (stack->size > 2)
+	{
+		node_a->next = node_c;
+		node_c->prev = node_a;
+	}
+	else
+		node_a->next = NULL;
+	return (1);
+}
+
+void	sa(t_context *context)
+{
+	t_stack	*a;
+
+	a = &context->a;
+	if (swap_top(a) == 1)
+		emit(OP_SA, context);
+}
+
+void	sb(t_context *context)
+{
+	t_stack	*b;
+
+	b = &context->b;
+	if (swap_top(b) == 1)
+		emit(OP_SB, context);
+}
+
+/*Prints if at least one stack swapped*/
+void	ss(t_context *context)
+{
+	t_stack	*a;
+	t_stack	*b;
+	int		swap_checker_a;
+	int		swap_checker_b;
+
+	a = &context->a;
+	b = &context->b;
+	swap_checker_a = swap_top(a);
+	swap_checker_b = swap_top(b);
+	if ((swap_checker_a == 1) || (swap_checker_b == 1))
+		emit(OP_SS, context);
+}
+
+==> src/stack/stack.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/29 13:57:34 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/14 11:41:44 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+Creates a new node
+index = -1 means "no rank yet"
+The Turk fields start at zero, false or NULL
+*/
+t_node	*node_new(int value)
+{
+	t_node	*node;
+
+	node = malloc(sizeof(t_node));
+	if (!node)
+		return (NULL);
+	node->value = value;
+	node->index = -1;
+	node->push_cost = 0;
+	node->above_median = false;
+	node->cheapest = false;
+	node->target_node = NULL;
+	node->next = NULL;
+	node->prev = NULL;
+	return (node);
+}
+
+/*
+Puts the node on top of the stack and adds 1 to size
+The old top (if there is one) now has the new node above it
+*/
+void	stack_push_top(t_stack *stack, t_node *node)
+{
+	node->prev = NULL;
+	node->next = stack->head;
+	if (stack->head != NULL)
+		stack->head->prev = node;
+	stack->head = node;
+	stack->size += 1;
+}
+
+/*
+-Detaches and returns the stack's top node
+-The new top has no node above it anymore
+-Subtracts 1 from size
+-Returns NULL if stack is empty
+*/
+t_node	*stack_pop_top(t_stack *stack)
+{
+	t_node	*top_node;
+
+	if (stack->head == NULL)
+		return (NULL);
+	top_node = stack->head;
+	stack->head = top_node->next;
+	if (stack->head != NULL)
+		stack->head->prev = NULL;
+	top_node->next = NULL;
+	top_node->prev = NULL;
+	stack->size -= 1;
+	return (top_node);
+}
+
+/*
+-Returns the stack's bottom node
+-Returns NULL if stack is empty
+*/
+t_node	*stack_last(t_stack *stack)
+{
+	t_node	*last_node;
+
+	if (!stack)
+		return (NULL);
+	last_node = stack->head;
+	if (last_node == NULL)
+		return (NULL);
+	while (last_node->next != NULL)
+	{
+		last_node = last_node->next;
+	}
+	return (last_node);
+}
+
+/*
+Frees every node in the stack
+Sets stack's size to zero
+*/
+void	stack_free(t_stack *stack)
+{
+	t_node	*node;
+
+	node = stack->head;
+	while (stack->head != NULL)
+	{
+		node = node->next;
+		free(stack->head);
+		stack->head = node;
+	}
+	stack->size = 0;
+}
+
+==> src/stack/stack_utils.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/30 21:53:20 by hadinh            #+#    #+#             */
+/*   Updated: 2026/11/14 15:26:10 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+Returns 1 if stack is sorted.
+Returns 1 if stack is empty.
+Returns 0 if not sorted
+*/
+int	stack_is_sorted(t_stack *stack)
+{
+	t_node	*node;
+	t_node	*next_node;
+
+	if (!stack->head)
+		return (1);
+	node = stack->head;
+	next_node = node->next;
+	while (next_node != NULL)
+	{
+		if (next_node->value >= node->value)
+		{
+			node = next_node;
+			next_node = next_node->next;
+		}
+		else
+			return (0);
+	}
+	return (1);
+}
+
+==> src/dispatch.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dispatch.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/08 22:44:44 by nami              #+#    #+#             */
+/*   Updated: 2026/11/14 15:18:57 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+/*
+A helper that picks the strategy based on disorder-value
+TWEAK THE DISORDER BORDERS DEPENDING ON PERFORMANCE!!!
+*/
+static void	disorder_picked_strategy(t_context *context)
+{
+	long		disorder_value;
+
+	disorder_value = context->stats.disorder_value;
+	if (disorder_value < 2000)
+		context->config.chosen_strategy = SIMPLE;
+	else if (disorder_value < 5000)
+		context->config.chosen_strategy = MEDIUM;
+	else
+		context->config.chosen_strategy = COMPLEX;
+}
+
+/*Chooses the sort that is saved in config*/
+static void	choose_sort(t_context *context)
+{
+	if (context->config.chosen_strategy == SIMPLE)
+		simple_sort(context);
+	else if (context->config.chosen_strategy == MEDIUM)
+		medium_sort(context);
+	else if (context->config.chosen_strategy == COMPLEX)
+		complex_sort(context);
+}
+
+/*
+Runs the strategy:
+-if sorted, returns nothing (0 or 1 number)
+-if 2 numbers, swap a (sa)
+-if 3 numbers: sort_three()
+-if 4 or more, decides with context's chosen strategy
+*/
+void	dispatch_sort(t_context *context)
+{
+	t_stack		*a;
+	t_strategy	strategy;
+
+	a = &context->a;
+	strategy = context->config.strategy;
+	context->stats.disorder_value = disorder(context);
+	context->config.chosen_strategy = SIMPLE;
+	if (stack_is_sorted(a) == 1)
+		return ;
+	if (a->size == 2)
+	{
+		sa(context);
+		return ;
+	}
+	if (a->size == 3)
+	{
+		sort_three(context);
+		return ;
+	}
+	if (strategy == ADAPTIVE)
+		disorder_picked_strategy(context);
+	else
+		context->config.chosen_strategy = strategy;
+	choose_sort(context);
+}
+
+==> src/main.c <==
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/31 16:40:28 by johtadro          #+#    #+#             */
+/*   Updated: 2026/11/14 15:37:31 by johtadro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static void	init_context(t_context *context)
+{
+	int	i;
+
+	context->a.head = NULL;
+	context->a.size = 0;
+	context->b.head = NULL;
+	context->b.size = 0;
+	context->config.strategy = ADAPTIVE;
+	context->config.bench = 0;
+	context->config.chosen_strategy = ADAPTIVE;
+	context->stats.total = 0;
+	context->stats.disorder_value = 0;
+	i = 0;
+	while (i < 11)
+		context->stats.ops[i++] = 0;
+}
+
+int	main(int argc, char **argv)
+{
+	t_context	context;
+
+	if (argc == 1)
+		return (0);
+	init_context(&context);
+	parse_flags(argc, argv, &context);
+	init_stack_a(&context, argv);
+	if (context.a.size == 0)
+		return (0);
+	dispatch_sort(&context);
+	if (context.config.bench == 1)
+		bench(&context);
+	stack_free(&context.a);
+	return (0);
+}

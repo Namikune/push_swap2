@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rank_numbers.c                                     :+:      :+:    :+:   */
+/*   index_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/22 14:18:48 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/12 11:52:31 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/14 11:41:21 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ t_node	*find_min(t_stack *stack)
 	t_node	*current;
 	t_node	*min_node;
 
-	if(!stack || !stack->head)
+	if (!stack || !stack->head)
 		return (NULL);
 	current = stack->head;
 	min_node = current;
-	while(current)
+	while (current)
 	{
 		if (current->value < min_node->value)
 			min_node = current;
@@ -64,7 +64,7 @@ int	get_node_position(t_stack *stack, t_node *target)
 {
 	t_node	*current;
 	int		pos;
-	
+
 	pos = 0;
 	current = stack->head;
 	while (current && current != target)

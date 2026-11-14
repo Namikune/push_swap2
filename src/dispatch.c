@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/08 22:44:44 by nami              #+#    #+#             */
-/*   Updated: 2026/11/10 22:28:22 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/14 15:18:57 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	disorder_picked_strategy(t_context *context)
 	long		disorder_value;
 
 	disorder_value = context->stats.disorder_value;
-	if (disorder_value < 1000)
+	if (disorder_value < 2000)
 		context->config.chosen_strategy = SIMPLE;
 	else if (disorder_value < 5000)
 		context->config.chosen_strategy = MEDIUM;
@@ -35,9 +35,9 @@ static void	choose_sort(t_context *context)
 	if (context->config.chosen_strategy == SIMPLE)
 		simple_sort(context);
 	else if (context->config.chosen_strategy == MEDIUM)
-		simple_sort(context);
+		medium_sort(context);
 	else if (context->config.chosen_strategy == COMPLEX)
-		simple_sort(context);
+		complex_sort(context);
 }
 
 /*
@@ -55,7 +55,7 @@ void	dispatch_sort(t_context *context)
 	a = &context->a;
 	strategy = context->config.strategy;
 	context->stats.disorder_value = disorder(context);
-	context->config.chosen_strategy = SIMPLE; //This is here for bench to print simple for simple algos, remove if we dont want it
+	context->config.chosen_strategy = SIMPLE;
 	if (stack_is_sorted(a) == 1)
 		return ;
 	if (a->size == 2)

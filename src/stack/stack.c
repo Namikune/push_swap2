@@ -6,7 +6,7 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/29 13:57:34 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/08 12:27:17 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/14 11:41:44 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ t_node	*stack_last(t_stack *stack)
 
 	if (!stack)
 		return (NULL);
-
 	last_node = stack->head;
 	if (last_node == NULL)
 		return (NULL);
