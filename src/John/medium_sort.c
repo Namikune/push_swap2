@@ -6,7 +6,7 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/12 11:21:48 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/14 15:24:35 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/14 21:38:09 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ void	medium_sort(t_context *context)
 {
 	int	chunk_size;
 
+	if (context->a.size <= 5)
+	{
+		sort_five(context);
+		return ;
+	}
 	rank_numbers(&context->a);
 	chunk_size = get_chunk_size(context->a.size);
 	push_chunks_to_b(context, chunk_size);

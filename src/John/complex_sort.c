@@ -6,7 +6,7 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/14 11:23:05 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/14 15:18:31 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/14 21:38:22 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,11 @@ static void	final_alignment(t_context *context)
 
 void	complex_sort(t_context *context)
 {
+	if (context->a.size <= 5)
+	{
+		sort_five(context);
+		return ;
+	}
 	rank_numbers(&context->a);
 	if (context->a.size > 3 && !stack_is_sorted(&context->a))
 		pb(context);

@@ -6,7 +6,7 @@
 /*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/01 13:26:47 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/14 16:32:23 by johtadro         ###   ########.fr       */
+/*   Updated: 2026/11/14 21:58:30 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ long	ft_atol(const char *s, int *error)
 	return (result * sign);
 }
 
-void	init_stack_a(t_context *context, char **argv, int start_idx)
+int	init_stack_a(t_context *context, char **argv, int start_idx)
 {
 	long	n;
 	int		i;
@@ -57,13 +57,14 @@ void	init_stack_a(t_context *context, char **argv, int start_idx)
 			continue ;
 		error = 0;
 		if (error_syntax(argv[i]))
-			free_errors(context);
+			return (0);
 		n = ft_atol(argv[i], &error);
 		if (error == 1 || error_duplicate(&context->a, (int)n))
-			free_errors(context);
+			return (0);
 		new_node = node_new((int)n);
 		if (!new_node)
-			free_errors(context);
+			return (0);
 		stack_push_top(&context->a, new_node);
 	}
+	return (1);
 }

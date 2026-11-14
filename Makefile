@@ -7,10 +7,12 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 SRCS    = main.c \
+		  normalize_args.c \
           John/handle_errors.c \
           John/simple_sort.c \
           John/sort_three.c \
 		  John/medium_sort.c \
+		  John/sort_five.c \
           John/stack_init.c \
           John/complex_sort.c \
           John/turk_targets.c \
