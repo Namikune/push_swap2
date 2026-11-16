@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   disorder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/09 18:13:00 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/10 22:09:15 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/14 15:25:24 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
 /* A static helper that counts the "mistakes" */
-static int	mistakes_count(t_context	*context)
+static int	mistakes_count(t_context *context)
 {
 	t_node	*start;
 	t_node	*next;

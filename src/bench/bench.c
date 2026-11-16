@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bench.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/09 19:53:29 by hadinh            #+#    #+#             */
-/*   Updated: 2026/11/10 22:40:15 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/14 16:53:55 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ Prints the strategy to stderr
 */
 static void	print_strategy(t_context *context)
 {
-	ft_putstr_fd("[bench] Strategy: ", 2);
+	ft_putstr_fd("[bench] strategy: ", 2);
 	if (context->config.strategy == ADAPTIVE)
-		ft_putstr_fd("Adaptive -> ", 2);
+		ft_putstr_fd("Adaptive / ", 2);
 	if (context->config.chosen_strategy == SIMPLE)
-		ft_putstr_fd("Simple / O(n²)", 2);
+		ft_putstr_fd("O(n²)", 2);
 	if (context->config.chosen_strategy == MEDIUM)
-		ft_putstr_fd("Medium / O(n√n)", 2);
+		ft_putstr_fd("O(n√n)", 2);
 	if (context->config.chosen_strategy == COMPLEX)
-		ft_putstr_fd("Complex / O(n log n)", 2);
+		ft_putstr_fd("O(n log n)", 2);
 	ft_putendl_fd("", 2);
 }
 

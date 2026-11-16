@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hadinh <hadinh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: johtadro <johtadro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/01 16:41:42 by johtadro          #+#    #+#             */
-/*   Updated: 2026/11/08 16:33:30 by hadinh           ###   ########.fr       */
+/*   Updated: 2026/11/14 16:32:26 by johtadro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	error_syntax(char *str)
 	i = 0;
 	if (!str || !*str)
 		return (1);
-	if (str[i] == '+' || str [i] == '-')
+	if (str[i] == '+' || str[i] == '-')
 	{
 		if (!ft_isdigit(str[i + 1]))
 			return (1);
